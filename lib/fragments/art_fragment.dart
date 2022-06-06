@@ -4,29 +4,21 @@ import 'package:briefify/providers/home_posts_provider.dart';
 import 'package:briefify/providers/user_provider.dart';
 import 'package:briefify/widgets/art_card.dart';
 import 'package:briefify/widgets/header.dart';
-import 'package:briefify/widgets/home_drawer.dart';
 import 'package:briefify/widgets/shimmer%20effect.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:briefify/data/constants.dart';
 import 'package:briefify/data/image_paths.dart';
 import 'package:briefify/data/urls.dart';
 import 'package:briefify/helpers/network_helper.dart';
-import 'package:briefify/models/post_model.dart';
 import 'package:briefify/providers/post_observer_provider.dart';
-import 'package:briefify/widgets/post_card.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quil;
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
+import 'dart:io' show Platform;
 
 class ArtFragment extends StatefulWidget {
   const ArtFragment({Key? key}) : super(key: key);
@@ -44,36 +36,36 @@ class _ArtFragmentState extends State<ArtFragment> {
     print('home screen is here');
     refreshArts();
     setScrollControllerListener();
-    // loadNativeAd();
+    loadNativeAd();
     super.initState();
   }
-  // @override
-  // void dispose() {
-  //   _ad.dispose();
-  //   super.dispose();
-  // }
-  // void loadNativeAd() {
-  //   _ad = NativeAd(
-  //       request: const AdRequest(),
-  //       ///This is a test adUnitId make sure to change it
-  //       adUnitId: 'ca-app-pub-3940256099942544/2247696110',
-  //       // adUnitId: 'ca-app-pub-1721909976834129/3168498284',
-  //       factoryId: 'listTile',
-  //       listener: NativeAdListener(
-  //           onAdLoaded: (ad){
-  //             setState(() {
-  //               isLoaded = true;
-  //             });
-  //           },
-  //           onAdFailedToLoad: (ad, error){
-  //             ad.dispose();
-  //             print('failed to load the ad ${error.message}, ${error.code}');
-  //           }
-  //       )
-  //   );
-  //
-  //   _ad.load();
-  // }
+  @override
+  void dispose() {
+    _ad.dispose();
+    super.dispose();
+  }
+  void loadNativeAd() {
+    _ad = NativeAd(
+        request: const AdRequest(),
+        ///This is a test adUnitId make sure to change it
+        adUnitId: 'ca-app-pub-3940256099942544/2247696110',
+        // adUnitId: 'ca-app-pub-1721909976834129/3168498284',
+        factoryId: 'listTile',
+        listener: NativeAdListener(
+            onAdLoaded: (ad){
+              setState(() {
+                isLoaded = true;
+              });
+            },
+            onAdFailedToLoad: (ad, error){
+              ad.dispose();
+              print('failed to load the ad ${error.message}, ${error.code}');
+            }
+        )
+    );
+
+    _ad.load();
+  }
 
 
   bool _loading = false;
@@ -150,7 +142,7 @@ class _ArtFragmentState extends State<ArtFragment> {
                       :
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: 8,
+                    itemCount: 4,
                     itemBuilder: (context, index) {
                       return shimmereffect(context: context);
                     },
@@ -226,7 +218,7 @@ class _ArtFragmentState extends State<ArtFragment> {
                   passtextofcreatepost: 'Share your knowledge...',
                 )
                 ///
-                : isLoaded && index == 2 ?
+                : isLoaded && index == 3 ?
                 Container(
                   height: 350,
                   margin: const EdgeInsets.fromLTRB(8, 0, 8, 15),

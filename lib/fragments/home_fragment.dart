@@ -114,7 +114,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                       )
                                     : ListView.builder(
                                         shrinkWrap: true,
-                                        itemCount: 8,
+                                        itemCount: 4,
                                         itemBuilder: (context, index) {
                                           return shimmereffect(context: context);
                                         },
@@ -136,6 +136,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                             //   ),
                             // ):
                             ///
+                            // _posts[index] != _posts[0] && _posts[index] == 'head' ? Container():
                             _posts[index] == _posts[0]
                                 ? headerPortion(
                                     context: context,
