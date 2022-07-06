@@ -553,7 +553,8 @@ class _PostCardState extends State<PostCard> {
               GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, postdetailRoute,
-                      arguments: {'postModel': widget.post});
+                      arguments: {'postModel': widget.post}
+                  );
                 },
                 child: AbsorbPointer(
                   child: ConstrainedBox(

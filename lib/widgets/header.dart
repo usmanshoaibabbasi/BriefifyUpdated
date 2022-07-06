@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Widget headerPortion({
-    context,
+Widget headerPortion(
+    {context,
     ontapmenuicon,
     ontapsearch,
     ontaphome,
@@ -31,7 +31,7 @@ Widget headerPortion({
           children: [
             /// 1st container
             Container(
-              height: MediaQuery.of(context).size.width*0.15,
+              height: MediaQuery.of(context).size.width * 0.15,
               // color: Colors.yellow,
               padding: const EdgeInsets.fromLTRB(15, 20, 15, 10),
               child: Row(
@@ -62,9 +62,10 @@ Widget headerPortion({
                 ],
               ),
             ),
+
             /// 2nd container
             Container(
-              height: MediaQuery.of(context).size.width*0.10,
+              height: MediaQuery.of(context).size.width * 0.10,
               // color: Colors.green,
               padding: const EdgeInsets.symmetric(horizontal: 40),
               // color: Colors.red,
@@ -81,7 +82,7 @@ Widget headerPortion({
                   ),
                   GestureDetector(
                     onTap: ontapart,
-                    child:  Icon(
+                    child: Icon(
                       FontAwesomeIcons.leaf,
                       color: artpasscolor,
                       size: 25,
@@ -108,14 +109,16 @@ Widget headerPortion({
                 ],
               ),
             ),
+
             /// 3rd container
             Container(
-              height: MediaQuery.of(context).size.width*0.05,
+              height: MediaQuery.of(context).size.width * 0.05,
               // color: Colors.blue,
             ),
+
             /// 4th container
             Container(
-              height: MediaQuery.of(context).size.width*0.15,
+              height: MediaQuery.of(context).size.width * 0.15,
               // color: Colors.brown,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -153,13 +156,12 @@ Widget headerPortion({
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                                color: const Color(0xffBBBBBB)),
+                            border: Border.all(color: const Color(0xffBBBBBB)),
                             color: const Color(0xffFFFFFF)),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(20, 8, 0, 8),
                           child: Text(
-                              passtextofcreatepost,
+                            passtextofcreatepost,
                           ),
                         ),
                       ),
@@ -168,9 +170,10 @@ Widget headerPortion({
                 ],
               ),
             ),
+
             /// 5th container
             Container(
-              height: MediaQuery.of(context).size.width*0.05,
+              height: MediaQuery.of(context).size.width * 0.05,
               // color: Colors.indigo,
             ),
           ],
@@ -181,5 +184,95 @@ Widget headerPortion({
         color: const Color(0XffEDF0F4),
       )
     ],
+  );
+}
+
+Widget bottomportion(
+    {context,
+    ontaphome,
+    homepasscolor,
+    ontapart,
+    artpasscolor,
+    ontapcreatepost,
+    ontapbooks,
+    bookspasscolor,
+    ontapprofile,
+    passimagesource,
+   }) {
+  return Container(
+    padding: const EdgeInsets.only(left: 20, right: 20),
+    height: 50,
+    decoration: const BoxDecoration(
+      color: Colors.white,
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        /// 1st icon
+        GestureDetector(
+          onTap: ontaphome,
+          child: Icon(
+            FontAwesomeIcons.house,
+            color: homepasscolor,
+            size: 25,
+          ),
+        ),
+        /// 2nd icon
+        GestureDetector(
+          onTap: ontapart,
+          child: Icon(
+            FontAwesomeIcons.leaf,
+            color: artpasscolor,
+            size: 25,
+          ),
+        ),
+        /// 3rd icon
+        GestureDetector(
+          onTap: ontapcreatepost,
+          child: const Icon(
+            FontAwesomeIcons.solidPenToSquare,
+            color: kTextColorLightGrey,
+            size: 25,
+          ),
+        ),
+        /// 4th icon
+        GestureDetector(
+          onTap: ontapbooks,
+          child: Icon(
+            FontAwesomeIcons.book,
+            size: 25,
+            color: bookspasscolor,
+          ),
+        ),
+        /// profile icon
+        RotationTransition(
+          turns: const AlwaysStoppedAnimation(15/360),
+          child: GestureDetector(
+            onTap: ontapprofile,
+            child: SizedBox(
+              width: 30,
+              height: 30,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(200),
+                child: FadeInImage(
+                  placeholder: const AssetImage(userAvatar),
+                  image: NetworkImage(passimagesource),
+                  fit: BoxFit.cover,
+                  imageErrorBuilder: (context, object, trace) {
+                    return Image.asset(
+                      appLogo,
+                      height: 30,
+                      width: 30,
+                    );
+                  },
+                  height: 30,
+                  width: 30,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }

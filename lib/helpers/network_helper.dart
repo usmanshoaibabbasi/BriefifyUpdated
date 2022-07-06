@@ -757,6 +757,7 @@ class NetworkHelper {
   ) async {
     try {
       final String apiToken = await Prefs().getApiToken();
+      print(apiToken);
       var request = MultipartRequest('POST', Uri.parse(uCreatePost));
       if (pdfFile != null && pdfFile.paths.isNotEmpty) {
         request.files

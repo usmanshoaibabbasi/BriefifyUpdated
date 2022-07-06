@@ -333,6 +333,7 @@ class _CreateArtScreenState extends State<CreateArtScreen> {
     });
     return 'some thing wrong';
   }
+
   Future<dynamic>getFileSize(String filepath, int decimals) async {
     print('enter in getFileSize');
     var file = File(filepath);

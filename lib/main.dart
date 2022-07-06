@@ -3,17 +3,23 @@ import 'package:briefify/fragments/art_fragment.dart';
 import 'package:briefify/fragments/home_fragment.dart';
 import 'package:briefify/fragments/search_fragment.dart';
 import 'package:briefify/helpers/admob_helper.dart';
+import 'package:briefify/models/books_modal.dart';
 import 'package:briefify/models/category_model.dart';
 import 'package:briefify/models/comment_model.dart';
 import 'package:briefify/models/post_model.dart';
 import 'package:briefify/models/user_model.dart';
+import 'package:briefify/providers/books_chapters_provider.dart';
 import 'package:briefify/providers/home_posts_provider.dart';
 import 'package:briefify/providers/post_observer_provider.dart';
 import 'package:briefify/providers/user_provider.dart';
 import 'package:briefify/screens/PostDetail.dart';
 import 'package:briefify/screens/art_detail.dart';
 import 'package:briefify/screens/art_screen.dart';
+import 'package:briefify/screens/books_screen.dart';
 import 'package:briefify/screens/categories_screen.dart';
+import 'package:briefify/screens/chapter_screen.dart';
+import 'package:briefify/screens/chapter_text_nonedited_screen.dart';
+import 'package:briefify/screens/chapter_text_screen.dart';
 import 'package:briefify/screens/comments_screen.dart';
 import 'package:briefify/screens/create_art_screen.dart';
 import 'package:briefify/screens/create_post_screen.dart';
@@ -81,6 +87,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => PostProvider()),
         ChangeNotifierProvider(create: (context) => PostObserverProvider()),
         ChangeNotifierProvider(create: (context) => ArtObserverProvider()),
+        ChangeNotifierProvider(create: (context) => BooksChapterProvider()),
       ],
       child: MaterialApp(
         title: 'Briefify',
@@ -370,6 +377,46 @@ class MyApp extends StatelessWidget {
           /// Get home fragment
           if (settings.name == artfragment) {
             return MaterialPageRoute(builder: (context) => const ArtScreen());
+          }
+          /// Get drawer
+          if (settings.name == drawer) {
+            return MaterialPageRoute(
+                builder: (context) => const AccountSection());
+          }
+          /// Books Screen
+          if (settings.name == booksroute) {
+            return MaterialPageRoute(
+                builder: (context) => const BooksScreen());
+          }
+          /// Chapter Screen
+          if (settings.name == chapterroute) {
+            final results = settings.arguments as Map;
+            BooksModal passBookModel = results['passBookModel'];
+            return MaterialPageRoute(
+                builder: (context) => ChapterScreen(
+                  BookModel: passBookModel,
+                ));
+          }
+          /// ChapterText Screen
+          if (settings.name == chapterTextroute) {
+            final results = settings.arguments as Map;
+            var passChapterText = results['passChapterText'];
+            final int passChapterId = results['passChapterId'];
+            return MaterialPageRoute(
+                builder: (context) => ChapterTextScreen(
+                  passChapterId: passChapterId,
+                  passChapterText: passChapterText,
+                  // postid: postid,
+                ));
+          }
+          /// chapterTextNonEditedroute Screen
+          if (settings.name == chapterTextNonEditedroute) {
+            final results = settings.arguments as Map;
+            ChapterModal passChapterModal = results['passChapterModel'];
+            return MaterialPageRoute(
+                builder: (context) => ChapterTextNonEditedScreen(
+                  chapterModal: passChapterModal,
+                ));
           }
 
           /// No route found

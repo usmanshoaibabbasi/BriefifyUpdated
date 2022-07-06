@@ -69,167 +69,138 @@ class _HomeFragmentState extends State<HomeFragment> {
     final _userData = Provider.of<UserProvider>(context);
     final UserModel _user = _userData.user;
     ///
-    return Container(
-          decoration: const BoxDecoration(
-            color: Color(0XffEDF0F4),
-          ),
-          child: _posts.isEmpty && !_loading && !_error
-              ? Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          refreshPosts();
-                        },
-                        icon: const Icon(Icons.refresh),
-                        iconSize: 30,
-                        color: kSecondaryTextColor,
-                      ),
-                      const Text('No Posts To Show'),
-                    ],
-                  ))
-              : Stack(
-                  children: [
-                    RefreshIndicator(
-                      onRefresh: refreshPosts,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        controller: _pageScrollController,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) => index == _posts.length &&
-                                nextPageURL.isNotEmpty
-                            ? Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: _error
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          getHomePosts();
-                                        },
-                                        child: Image.asset(
-                                          errorIcon,
-                                          height: 40,
-                                        ),
-                                      )
-                                    : ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: 4,
-                                        itemBuilder: (context, index) {
-                                          return shimmereffect(context: context);
-                                        },
-                                      ),
-                              )
-                            :
-                            // _posts[index] is NativeAd ?
-                            // Container(
-                            //   decoration: const BoxDecoration(
-                            //     color: Color(0xffFFFFFF),
-                            //     borderRadius: BorderRadius.all(Radius.circular(20),
-                            //     ),
-                            //   ),
-                            //   margin: const EdgeInsets.fromLTRB(8, 0, 8, 15),
-                            //   height: 190,
-                            //   child: AdWidget(
-                            //     ad: _posts[index] as NativeAd,
-                            //     key: UniqueKey(),
-                            //   ),
-                            // ):
-                            ///
-                            // _posts[index] != _posts[0] && _posts[index] == 'head' ? Container():
-                            _posts[index] == _posts[0]
-                                ? headerPortion(
-                                    context: context,
-                                    ontapmenuicon: () {
-                                      // key1.currentState?.openDrawer();
-                                    },
-                                    ontapsearch: () {
-                                      Navigator.pushNamed(context, searchfragment);
-                                    },
-                                    ontaphome: () {
-                                      /// nothing
-                                    },
-                                    homepasscolor: kPrimaryColorLight,
-                                    ontapart: () {
-                                      Navigator.pushNamedAndRemoveUntil(context, artfragment, ModalRoute.withName(welcomeRoute));
-                                    },
-                                    artpasscolor: const Color(0xffBBBBBB),
-                                    ontapbriefifylogo: () {
-                                      Navigator.pushNamed(context, myProfileRoute);
-                                    },
-                                    ontapprofile: () {
-                                      Navigator.pushNamed(context, myProfileRoute);
-                                    },
-                                    passimagesource: _user.image,
-                                    ontapcreatepost: () {
-                                      if (_user.badgeStatus == badgeVerificationApproved) {
-                                        Navigator.pushNamed(context, createPostRoute);
-                                      } else {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return CupertinoAlertDialog(
-                                                content: const Text(
-                                                    'You need to verify your profile before posting context'),
-                                                title: const Text('Verification Required'),
-                                                actions: [
-                                                  CupertinoDialogAction(
-                                                    child: const Text('Start'),
-                                                    isDefaultAction: true,
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop();
-                                                      Navigator.pushNamed(
-                                                          context, profileVerificationRoute);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      }
-                                    },
-                                    passtextofcreatepost: 'Share your knowledge...',
-                                  )
-                                :
-                                ///
-                                     PostCard(
-                                        post: _posts[index],
-                                        playAudio: () {
-                                          var myJSON = jsonDecode(
-                                              _posts[index].summary.toString());
-                                          quil.Document doc =
-                                              quil.Document.fromJson(myJSON);
-                                          speak(doc.toPlainText());
-                                        },
-                                      ),
-                        itemCount: nextPageURL.isEmpty
-                            ? _posts.length
-                            : _posts.length + 1,
-                      ),
-                    ),
-                    if (count > 7)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          MaterialButton(
-                            padding: const EdgeInsets.all(0),
-                            height: 28,
-                            onPressed: () {
-                              refreshPosts();
-                            },
-                            child: const Text(
-                              'New Posts',
-                              style: TextStyle(
-                                fontSize: 12,
-                              ),
-                            ),
-                            color: kPrimaryColorDark,
-                            textColor: Colors.white,
-                          ),
-                        ],
-                      )
-                  ],
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 15, 20, 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.asset(
+                appLogo,
+                height: 23,
+                width: 75,
+              ),
+              GestureDetector(
+                onTap: (() {
+                  Navigator.pushNamed(context, searchfragment);
+                }),
+                child: const Icon(
+                  Icons.search_sharp,
+                  size: 30,
+                  color: kPrimaryColorLight,
                 ),
-        );
+              )
+            ],
+          ),
+        ),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.only(top: 10),
+                decoration: const BoxDecoration(
+                  color: Color(0XffEDF0F4),
+                ),
+                child: _posts.isEmpty && !_loading && !_error
+                    ? Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        child: Column(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                refreshPosts();
+                              },
+                              icon: const Icon(Icons.refresh),
+                              iconSize: 30,
+                              color: kSecondaryTextColor,
+                            ),
+                            const Text('No Posts To Show'),
+                          ],
+                        ))
+                    : Stack(
+                        children: [
+                          RefreshIndicator(
+                            onRefresh: refreshPosts,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              controller: _pageScrollController,
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) => index == _posts.length &&
+                                      nextPageURL.isNotEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: _error
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                getHomePosts();
+                                              },
+                                              child: Image.asset(
+                                                errorIcon,
+                                                height: 40,
+                                              ),
+                                            )
+                                          : shimmereffect(context: context),
+                                    )
+                                  :
+                                  ///
+                                  // _posts[index] is NativeAd ?
+                                  // Container(
+                                  //   decoration: const BoxDecoration(
+                                  //     color: Color(0xffFFFFFF),
+                                  //     borderRadius: BorderRadius.all(Radius.circular(20),
+                                  //     ),
+                                  //   ),
+                                  //   margin: const EdgeInsets.fromLTRB(8, 0, 8, 15),
+                                  //   height: 190,
+                                  //   child: AdWidget(
+                                  //     ad: _posts[index] as NativeAd,
+                                  //     key: UniqueKey(),
+                                  //   ),
+                                  // ):
+                              ///
+                                           PostCard(
+                                              post: _posts[index],
+                                              playAudio: () {
+                                                var myJSON = jsonDecode(
+                                                    _posts[index].summary.toString());
+                                                quil.Document doc =
+                                                    quil.Document.fromJson(myJSON);
+                                                speak(doc.toPlainText());
+                                              },
+                                            ),
+                              itemCount: nextPageURL.isEmpty
+                                  ? _posts.length
+                                  : _posts.length + 1,
+                            ),
+                          ),
+                          if (count > 7)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MaterialButton(
+                                  padding: const EdgeInsets.all(0),
+                                  height: 28,
+                                  onPressed: () {
+                                    refreshPosts();
+                                  },
+                                  child: const Text(
+                                    'New Posts',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  color: kPrimaryColorDark,
+                                  textColor: Colors.white,
+                                ),
+                              ],
+                            )
+                        ],
+                      ),
+              ),
+        ),
+      ],
+    );
   }
 
   void getHomePosts() async {

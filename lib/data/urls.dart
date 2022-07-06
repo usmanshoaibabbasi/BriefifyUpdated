@@ -1,6 +1,6 @@
 const String uBaseURL = 'http://admin.briefify.io/api/';
 // const String uBaseURL = 'http://test.briefify.io/api/';
-// const String uBaseURL = 'http://briefify.tritech.host/api/';
+//const String uBaseURL = 'http://briefify.tritech.host/api/';
 // const String uBaseURL = 'http://192.168.18.62/briefify/public/api/';
 
 const uRegisterUser = uBaseURL + 'register';
@@ -19,6 +19,14 @@ const uUnfollowUser = uBaseURL + 'unfollow/user';
 const uGetVerificationStatus = uBaseURL + 'check/badge/request';
 const uRequestVerification = uBaseURL + 'user/badge/request';
 const uSearchPost = uBaseURL + 'post/search';
+
+/// Books
+const uBooksUser = uBaseURL + 'book/get';
+const uAddBook = uBaseURL + 'book/create';
+/// Chapters
+const uAddChapter = uBaseURL + 'chapter/create';
+const uChapterUser = uBaseURL + 'getchapter';
+const uUpdateChapterText = uBaseURL + 'text/update';
 
 /// Posts url
 const uCreatePost = uBaseURL + 'post/create';

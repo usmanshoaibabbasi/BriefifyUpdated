@@ -63,69 +63,9 @@ class _SearchFragmentState extends State<SearchFragment> {
     return SingleChildScrollView(
         child: Column(
           children: [
-            headerPortion(
-              context: context,
-              ontapmenuicon: () {
-                print('menu');
-                _keyformenu.currentState!.openDrawer();
-              },
-              ontapsearch: () {
-                print('search');
-
-                /// nothing here
-              },
-              ontaphome: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, homeRoute, ModalRoute.withName(welcomeRoute));
-              },
-              homepasscolor: const Color(0xffBBBBBB),
-              ontapart: () {
-                Navigator.pushNamedAndRemoveUntil(context, artfragment, ModalRoute.withName(welcomeRoute));
-              },
-              artpasscolor: const Color(0xffBBBBBB),
-              ontapbriefifylogo: () {
-                Navigator.pushNamed(context, myProfileRoute);
-              },
-              ontapprofile: () {
-                Navigator.pushNamed(context, myProfileRoute);
-
-              },
-              passimagesource: _user.image,
-              ontapcreatepost: () {
-                if (_user.badgeStatus == badgeVerificationApproved) {
-                  Navigator.pushNamed(context, createPostRoute);
-                } else {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CupertinoAlertDialog(
-                          content: const Text(
-                              'You need to verify your profile before posting context'),
-                          title: const Text('Verification Required'),
-                          actions: [
-                            CupertinoDialogAction(
-                              child: const Text('Start'),
-                              isDefaultAction: true,
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.pushNamed(
-                                    context, profileVerificationRoute);
-                              },
-                            ),
-                          ],
-                        );
-                      });
-                }
-              },
-              passtextofcreatepost: 'Share your knowledge...',
-            ),
-            Container(
-              height: 10,
-              color: const Color(0xffEDF0F4),
-            ),
             Container(
               color: Colors.white,
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
               margin: const EdgeInsets.only(bottom: 10),
               child: TextField(
                 controller: _searchTextController,

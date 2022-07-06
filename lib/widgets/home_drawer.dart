@@ -7,14 +7,16 @@ import 'package:briefify/providers/user_provider.dart';
 import 'package:briefify/screens/term_and_condition.dart';
 import 'package:briefify/utils/prefs.dart';
 import 'package:briefify/widgets/drawer_item.dart';
+import 'package:briefify/widgets/header.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HomeDrawer extends StatelessWidget {
-  const HomeDrawer({Key? key}) : super(key: key);
+class AccountSection extends StatelessWidget {
+  const AccountSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,240 +24,498 @@ class HomeDrawer extends StatelessWidget {
     final _userData = Provider.of<UserProvider>(context);
     final UserModel _user = _userData.user;
 
-    return Drawer(
-      child: SafeArea(
-        child: SingleChildScrollView(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xffEDF0F4),
+        bottomSheet: bottomportion(
+          context: context,
+          ///
+          ontaphome: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context, homeRoute, ModalRoute.withName(welcomeRoute));
+          },
+          ///
+          homepasscolor: kTextColorLightGrey,
+          ///
+          ontapart: () {
+            Navigator.pushNamedAndRemoveUntil(context, artfragment, ModalRoute.withName(welcomeRoute));
+          },
+          ///
+          artpasscolor: kTextColorLightGrey,
+          ///
+          ontapcreatepost: () {
+            if (_user.badgeStatus == badgeVerificationApproved) {
+              Navigator.pushNamed(context, createPostRoute);
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CupertinoAlertDialog(
+                      content: const Text(
+                          'You need to verify your profile before posting context'),
+                      title: const Text('Verification Required'),
+                      actions: [
+                        CupertinoDialogAction(
+                          child: const Text('Start'),
+                          isDefaultAction: true,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.pushNamed(
+                                context, profileVerificationRoute);
+                          },
+                        ),
+                      ],
+                    );
+                  });
+            }
+          },
+          ///
+          ontapbooks: () {
+            Navigator.pushNamed(context, booksroute);
+          },
+          ///
+          bookspasscolor:  kTextColorLightGrey,
+          ontapprofile: () {
+            //Navigator.pushNamed(context, myProfileRoute);
+            Navigator.pushNamed(context, drawer);
+          },
+          ///
+          passimagesource: _user.image,
+        ),
+        body: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 130,
-                child: DrawerHeader(
-                    margin: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              /// 1st container having header portion
+              Container(
+                padding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
+                decoration: const BoxDecoration(
+                  color: Color(0xffFFFFFF),
+                  borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    /// Icons Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                // Display Full Image Profile
-                                Navigator.pushNamed(context, ImgeScreenProfile);
-                              },
-                              child: Badge(
-                                badgeContent: const Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 10,
-                                ),
-                                showBadge: _user.badgeStatus == 2,
-                                position:
-                                    BadgePosition.bottomEnd(bottom: 8, end: -3),
-                                badgeColor: kPrimaryColorLight,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(200),
-                                  child: FadeInImage(
-                                    placeholder: const AssetImage(userAvatar),
-                                    image: NetworkImage(_user.image),
-                                    fit: BoxFit.cover,
-                                    imageErrorBuilder:
-                                        (context, object, trace) {
-                                      return Image.asset(
-                                        appLogo,
-                                        height: 60,
-                                        width: 60,
-                                      );
-                                    },
-                                    height: 80,
-                                    width: 80,
-                                  ),
-                                ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: kPrimaryColorLight,
+                                borderRadius: BorderRadius.circular(200),
+                              ),
+                              child: const Icon(
+                                Icons.arrow_back_outlined,
+                                color: Colors.white,
+                              )),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(5.0),
+                          decoration: const BoxDecoration(
+                            color: Color(0xffEFF2F7),
+                            borderRadius: BorderRadius.all(Radius.circular(200)),
+                          ),
+                          child: const Icon(
+                            FontAwesomeIcons.ellipsisVertical,
+                            size: 16,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
+                    /// sizedbox after icons row
+                    const SizedBox(height: 25,),
+                    /// picture and other content
+                    Container(
+                      child: Row(
+                        children: [
+                          /// picture
+                          GestureDetector(
+                            onTap: () {
+                              // Display Full Image Profile
+                              Navigator.pushNamed(context, ImgeScreenProfile);
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(200),
+                              child: FadeInImage(
+                                placeholder: const AssetImage(userAvatar),
+                                image: NetworkImage(_user.image),
+                                fit: BoxFit.cover,
+                                imageErrorBuilder:
+                                    (context, object, trace) {
+                                  return Image.asset(
+                                    appLogo,
+                                    height: 100,
+                                    width: 100,
+                                  );
+                                },
+                                height: 100,
+                                width: 100,
                               ),
                             ),
-                            Column(
-                              children: [
-                                Text(
-                                  _user.userFollowers.toString(),
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                          ),
+                          /// sizedbox after picture
+                          const SizedBox(width: 20,),
+                          /// content on right of picture
+                          Expanded(
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    _user.name,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                const Text(
-                                  'Followers',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.blue,
+                                  const SizedBox(height: 5,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          _user.occupation == '' || _user.occupation == null ? 'user city' : _user.occupation,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.normal
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4,),
+                                      const Icon(
+                                        FontAwesomeIcons.camera,
+                                        size: 16,
+                                        color: Colors.black,
+                                      ),
+                                      const SizedBox(width: 4,),
+                                      Flexible(
+                                        child: Text(
+                                          _user.city == '' || _user.city == null ? 'user city' : _user.city,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.normal
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                )
-                              ],
+                                ],
+                              ),
                             ),
-                            Column(
-                              children: [
-                                Text(
-                                  _user.userFollowing.toString(),
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          )
+                        ],
+                      ),
+                    ),
+                    /// sized box after picture container
+                    const SizedBox(height: 15,),
+                    /// last containber odf post follwers
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                _user.userFollowers.toString(),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold
                                 ),
-                                const SizedBox(
-                                  height: 5,
+                              ),
+                              const SizedBox(height: 3,),
+                              const Text(
+                                'Post',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.normal
                                 ),
-                                const Text(
-                                  'Followings',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.blue,
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
+                              )
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                _user.userFollowers.toString(),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              const SizedBox(height: 3,),
+                              const Text(
+                                'Followers',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.normal
+                                ),
+                              )
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                _user.userFollowing.toString(),
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              const SizedBox(height: 3,),
+                              const Text(
+                                'Following',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.normal
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              /// sizedbox after header
+              const SizedBox(height: 15,),
+              /// Menu portion
+              Container(
+                color: Colors.white,
+                child: Row(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Menu',
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.normal
                         ),
-                        // const SizedBox(height: 10),
-                        // Text(
-                        //   _user.name,
-                        //   style: const TextStyle(
-                        //     fontWeight: FontWeight.normal,
-                        //     fontSize: 20,
-                        //     color: kPrimaryTextColor,
-                        //   ),
-                        // ),
-                      ],
-                    )),
-              ),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(10, 50, 0, 5),
-                    child: const Text(
-                      'Account',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.blue,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              DrawerItem(
-                  icon: CupertinoIcons.person_fill,
-                  col: Colors.blue,
-                  title: 'Profile',
-                  onTap: () {
-                    Navigator.pushNamed(context, myProfileRoute);
-                  },
-              ),
-              DrawerItem(
-                  icon: CupertinoIcons.check_mark_circled_solid,
-                  col: Colors.blue,
-                  title: 'Verification',
-                  onTap: () {
-                    Navigator.pushNamed(context, profileVerificationRoute);
-                  }),
-              DrawerItem(
-                  icon: CupertinoIcons.folder_circle_fill,
-                  col: Colors.blue,
-                  title: 'Categories',
-                  onTap: () {
-                    Navigator.pushNamed(context, categoriesRoute);
-                  }),
-              DrawerItem(
-                  icon: CupertinoIcons.folder_circle_fill,
-                  col: Colors.blue,
-                  title: 'Wallet',
-                  onTap: () {
-                    Navigator.pushNamed(context, walletRoute);
-                  }),
-              DrawerItem(
-                  icon: CupertinoIcons.arrow_down_left_circle_fill,
-                  col: Colors.blue,
-                  title: 'Logout',
-                  onTap: () async {
-                    await FirebaseAuth.instance.signOut();
-                    await Prefs().logoutUser();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, welcomeRoute, ModalRoute.withName(homeRoute));
-                  }),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(10, 50, 0, 5),
-                    child: const Text(
-                      'Links',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20,),
+                    AccountSectionItems(
+                      context: context,
+                      ontapAccountSectionItems: () {
+                        Navigator.pushNamed(context, myProfileRoute);
+                      },
+                      widgetpass: SizedBox(
+                        width: 36,
+                        height: 36,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(200),
+                          child: FadeInImage(
+                            placeholder: const AssetImage(userAvatar),
+                            image: NetworkImage(_user.image),
+                            fit: BoxFit.cover,
+                            imageErrorBuilder: (context, object, trace) {
+                              return Image.asset(
+                                appLogo,
+                                height: 36,
+                                width: 36,
+                              );
+                            },
+                            height: 36,
+                            width: 36,
+                          ),
+                        ),
+                      ),
+                      title: _user.name
+                    ),
+                    const SizedBox(height: 15,),
+                    AccountSectionItems(
+                      context: context,
+                      ontapAccountSectionItems: () {
+                        Navigator.pushNamed(context, profileVerificationRoute);
+                      },
+                      widgetpass: const Icon(
+                        CupertinoIcons.check_mark_circled_solid,
+                        size: 36,
                         color: Colors.blue,
                       ),
+                      title: 'Verification'
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 15,),
+                    AccountSectionItems(
+                        context: context,
+                        ontapAccountSectionItems: () {
+                          Navigator.pushNamed(context, categoriesRoute);
+                        },
+                        widgetpass: const Icon(
+                          CupertinoIcons.folder_circle_fill,
+                          size: 36,
+                          color: Colors.blue,
+                        ),
+                        title: 'Categories'
+                    ),
+                    const SizedBox(height: 15,),
+                    AccountSectionItems(
+                        context: context,
+                        ontapAccountSectionItems: () {
+                          Navigator.pushNamed(context, walletRoute);
+                        },
+                        widgetpass: const Icon(
+                          CupertinoIcons.creditcard_fill,
+                          size: 36,
+                          color: Colors.blue,
+                        ),
+                        title: 'Wallet'
+                    ),
+                    const SizedBox(height: 15,),
+                    AccountSectionItems(
+                        context: context,
+                        ontapAccountSectionItems: () async {
+                          await FirebaseAuth.instance.signOut();
+                          await Prefs().logoutUser();
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, welcomeRoute, ModalRoute.withName(homeRoute));
+                        },
+                        widgetpass: const Icon(
+                          CupertinoIcons.arrow_down_left_circle_fill,
+                          size: 36,
+                          color: Colors.blue,
+                        ),
+                        title: 'Logout'
+                    ),
+                  ],
+                ),
               ),
-              DrawerItem(
-                  icon: CupertinoIcons.info_circle_fill,
-                  col: Colors.blue,
-                  title: 'About Us',
-                  onTap: () {
-                    launchurl1(url1: 'https://briefify.io/');
-                  }),
-              DrawerItem(
-                  icon: CupertinoIcons.question_circle_fill,
-                  col: Colors.blue,
-                  title: 'FAQs',
-                  onTap: () {
-                    launchurl1(url1: 'https://briefify.io/');
-                  }),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(10, 50, 0, 5),
-                    child: const Text(
-                      'Legal',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.blue,
+              /// sizedBox After Menu
+              const SizedBox(height: 15,),
+              /// Link portion
+              Container(
+                color: Colors.white,
+                child: Row(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Links',
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.normal
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              DrawerItem(
-                  icon: CupertinoIcons.folder_circle_fill,
-                  col: Colors.blue,
-                  title: 'Privacy Policy',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TermAndConditionScreen()),
-                    );
-                  }),
-              DrawerItem(
-                  icon: CupertinoIcons.minus_circle_fill,
-                  col: Colors.blue,
-                  title: 'Terms and Conditions',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TermAndConditionScreen()),
-                    );
-                  }),
-              const SizedBox(
-                height: 50,
-              )
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20,),
+                    AccountSectionItems(
+                        context: context,
+                        ontapAccountSectionItems: () {
+                          launchurl1(url1: 'https://briefify.io/');
+                        },
+                        widgetpass: const Icon(
+                          CupertinoIcons.info_circle_fill,
+                          size: 36,
+                          color: Colors.blue,
+                        ),
+                        title: 'About Us'
+                    ),
+                    const SizedBox(height: 15,),
+                    AccountSectionItems(
+                        context: context,
+                        ontapAccountSectionItems: () {
+                          launchurl1(url1: 'https://briefify.io/');
+                        },
+                        widgetpass: const Icon(
+                          CupertinoIcons.question_circle_fill,
+                          size: 36,
+                          color: Colors.blue,
+                        ),
+                        title: 'FAQs'
+                    ),
+                  ],
+                ),
+              ),
+              /// sizedBox After Links
+              const SizedBox(height: 15,),
+              /// Legal portion
+              Container(
+                color: Colors.white,
+                child: Row(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Legal',
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.normal
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20,),
+                    AccountSectionItems(
+                        context: context,
+                        ontapAccountSectionItems: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const TermAndConditionScreen()),
+                          );
+                        },
+                        widgetpass: const Icon(
+                          CupertinoIcons.folder_circle_fill,
+                          size: 36,
+                          color: Colors.blue,
+                        ),
+                        title: 'Privacy Policy'
+                    ),
+                    const SizedBox(height: 15,),
+                    AccountSectionItems(
+                        context: context,
+                        ontapAccountSectionItems: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const TermAndConditionScreen()),
+                          );
+                        },
+                        widgetpass: const Icon(
+                          CupertinoIcons.question_circle_fill,
+                          size: 36,
+                          color: Colors.blue,
+                        ),
+                        title: 'Terms and Conditions'
+                    ),
+                    const SizedBox(height: 70,),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

@@ -43,7 +43,7 @@ class _WalletScreenState extends State<WalletScreen> {
         child: Scaffold(
           body: Container(
             height: MediaQuery.of(context).size.height,
-            color: Color(0XffD3D3D3),
+            color: const Color(0XffD3D3D3),
             child: _loading == true
                 ? const Center(child: CircularProgressIndicator())
                 : Stack(

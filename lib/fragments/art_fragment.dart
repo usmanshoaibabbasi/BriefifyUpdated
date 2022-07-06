@@ -33,7 +33,6 @@ class _ArtFragmentState extends State<ArtFragment> {
   bool isLoaded = false;
   @override
   void initState() {
-    print('home screen is here');
     refreshArts();
     setScrollControllerListener();
     loadNativeAd();
@@ -48,8 +47,8 @@ class _ArtFragmentState extends State<ArtFragment> {
     _ad = NativeAd(
         request: const AdRequest(),
         ///This is a test adUnitId make sure to change it
-        adUnitId: 'ca-app-pub-3940256099942544/2247696110',
-        // adUnitId: 'ca-app-pub-1721909976834129/3168498284',
+        // adUnitId: 'ca-app-pub-3940256099942544/2247696110',
+        adUnitId: 'ca-app-pub-1721909976834129/3168498284',
         factoryId: 'listTile',
         listener: NativeAdListener(
             onAdLoaded: (ad){
@@ -92,180 +91,126 @@ class _ArtFragmentState extends State<ArtFragment> {
     final _postObserverData = Provider.of<ArtObserverProvider>(context);
     final int count = _postObserverData.newPostCount;
     final double _width = MediaQuery.of(context).size.width;
-    return Container(
-        decoration: const BoxDecoration(color: Color(0XffEDF0F4),),
-        child: _arts.isEmpty && !_loading && !_error
-            ? Container(
-            alignment: Alignment.center,
-            width: double.infinity,
-            child: Column(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    refreshArts();
-                  },
-                  icon: const Icon(Icons.refresh),
-                  iconSize: 30,
-                  color: kSecondaryTextColor,
-                ),
-                const Text('No Posts To Show'),
-              ],
-            ))
-            : Stack(
-          children: [
-            RefreshIndicator(
-              onRefresh: refreshArts,
-              child: ListView.builder(
-                primary: false,
-                shrinkWrap: true,
-                controller: _pageScrollController,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) =>
-                index == _arts.length && nextPageURL.isNotEmpty
-                    ?
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: _error
-                      ? GestureDetector(
-                    onTap: () {
-                      getHomeArts();
-                      print('_posts');
-                      print(_arts);
-                      print('_postsData');
-                      print(_artsData);
-                    },
-                    child: Image.asset(
-                      errorIcon,
-                      height: 40,
-                    ),
-                  )
-                      :
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return shimmereffect(context: context);
-                    },
-                  ),
-                )
-                // _arts[index] is NativeAd ?
-                // Container(
-                //   decoration: const BoxDecoration(
-                //     color: Color(0xffFFFFFF),
-                //     borderRadius: BorderRadius.all(Radius.circular(20),
-                //     ),
-                //   ),
-                //   margin: const EdgeInsets.fromLTRB(8, 0, 8, 15),
-                //   height: 190,
-                //   child: AdWidget(
-                //     ad: _arts[index] as NativeAd,
-                //     key: UniqueKey(),
-                //   ),
-                // ):
-                ///
-                : _arts[index] == _arts[0]
-                    ? headerPortion(
-                  context: context,
-                  ontapmenuicon: () {
-                    _key.currentState!.openDrawer();
-                  },
-                  ontapsearch: () {
-                    Navigator.pushNamed(
-                        context, searchfragment);
-                  },
-                  ontaphome: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, homeRoute, ModalRoute.withName(welcomeRoute));
-                  },
-                  homepasscolor: const Color(0xffBBBBBB),
-                  ontapart: () {
-                    /// nothing
-                  },
-                  artpasscolor: kPrimaryColorLight,
-                  ontapbriefifylogo: () {
-                    Navigator.pushNamed(context, myProfileRoute);
-                  },
-                  ontapprofile: () {
-                    Navigator.pushNamed(context, myProfileRoute);
-                  },
-                  passimagesource: _user.image,
-                  ontapcreatepost: () {
-                    if (_user.badgeStatus == badgeVerificationApproved) {
-                      Navigator.pushNamed(context, createArtRoute);
-                    } else {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return CupertinoAlertDialog(
-                              content: const Text(
-                                  'You need to verify your profile before posting context'),
-                              title: const Text('Verification Required'),
-                              actions: [
-                                CupertinoDialogAction(
-                                  child: const Text('Start'),
-                                  isDefaultAction: true,
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.pushNamed(
-                                        context, profileVerificationRoute);
-                                  },
-                                ),
-                              ],
-                            );
-                          });
-                    }
-                  },
-                  passtextofcreatepost: 'Share your knowledge...',
-                )
-                ///
-                : isLoaded && index == 3 ?
-                Container(
-                  height: 350,
-                  margin: const EdgeInsets.fromLTRB(8, 0, 8, 15),
-                  decoration: const BoxDecoration(
-                    color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.all(Radius.circular(20),
-                    ),
-                  ),
-                  child: AdWidget(
-                    ad: _ad,
-                    key: UniqueKey(),
-                  ),
+    return Column(
+      children: [
+        const Padding(padding: EdgeInsets.only(top: 10)),
+        Expanded(
+          child: Container(
+              decoration: const BoxDecoration(color: Color(0XffEDF0F4),),
+              child: _arts.isEmpty && !_loading && !_error
+                  ? Container(
                   alignment: Alignment.center,
-                )
-                ///
-                : ArtCard(
-                  post: _arts[index],
-                ),
-                itemCount: nextPageURL.isEmpty
-                    ? _arts.length
-                    : _arts.length + 1,
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          refreshArts();
+                        },
+                        icon: const Icon(Icons.refresh),
+                        iconSize: 30,
+                        color: kSecondaryTextColor,
+                      ),
+                      const Text('No Posts To Show'),
+                    ],
+                  ))
+                  : Stack(
+                children: [
+                  RefreshIndicator(
+                    onRefresh: refreshArts,
+                    child: ListView.builder(
+                      primary: false,
+                      shrinkWrap: true,
+                      controller: _pageScrollController,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) =>
+                      index == _arts.length && nextPageURL.isNotEmpty
+                          ?
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: _error
+                            ? GestureDetector(
+                          onTap: () {
+                            getHomeArts();
+                            print('_posts');
+                            print(_arts);
+                            print('_postsData');
+                            print(_artsData);
+                          },
+                          child: Image.asset(
+                            errorIcon,
+                            height: 40,
+                          ),
+                        )
+                            :
+                        shimmereffect(context: context),
+                      )
+                      // _arts[index] is NativeAd ?
+                      // Container(
+                      //   decoration: const BoxDecoration(
+                      //     color: Color(0xffFFFFFF),
+                      //     borderRadius: BorderRadius.all(Radius.circular(20),
+                      //     ),
+                      //   ),
+                      //   margin: const EdgeInsets.fromLTRB(8, 0, 8, 15),
+                      //   height: 190,
+                      //   child: AdWidget(
+                      //     ad: _arts[index] as NativeAd,
+                      //     key: UniqueKey(),
+                      //   ),
+                      // ):
+                      ///
+                      : isLoaded && index == 3 ?
+                      Container(
+                        height: 350,
+                        margin: const EdgeInsets.fromLTRB(8, 0, 8, 15),
+                        decoration: const BoxDecoration(
+                          color: Color(0xffFFFFFF),
+                          borderRadius: BorderRadius.all(Radius.circular(20),
+                          ),
+                        ),
+                        child: AdWidget(
+                          ad: _ad,
+                          key: UniqueKey(),
+                        ),
+                        alignment: Alignment.center,
+                      )
+                      ///
+                      : ArtCard(
+                        post: _arts[index],
+                      ),
+                      itemCount: nextPageURL.isEmpty
+                          ? _arts.length
+                          : _arts.length + 1,
+                    ),
+                  ),
+                  if (count > 7)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MaterialButton(
+                          padding: const EdgeInsets.all(0),
+                          height: 28,
+                          onPressed: () {
+                            refreshArts();
+                          },
+                          child: const Text(
+                            'New Arts',
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                          color: kPrimaryColorDark,
+                          textColor: Colors.white,
+                        ),
+                      ],
+                    )
+                ],
               ),
             ),
-            if (count > 7)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  MaterialButton(
-                    padding: const EdgeInsets.all(0),
-                    height: 28,
-                    onPressed: () {
-                      refreshArts();
-                    },
-                    child: const Text(
-                      'New Arts',
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                    color: kPrimaryColorDark,
-                    textColor: Colors.white,
-                  ),
-                ],
-              )
-          ],
         ),
-      );
+      ],
+    );
   }
 
   void getHomeArts() async {
